@@ -51,9 +51,10 @@ public:
    stack() = default;//default constructor is activated explicitely, since we have provided our own constructor.
 
   // stack(const T& t):mstack({t}){}
-   //we are passing only one element t in vector initialiser list to help the compiler to deduce the type of argument. so curly braces are used to pass initialiser list to container/vector
+   //we are passing only one element t in vector initialiser list to help the compiler to deduce the type of argument.
+    //so curly braces are used to pass initialiser list to container/vector
 
-  stack(const T t):mstack({std::move(t)}){}
+  stack(const T t):mstack({std::move(t)}){}//pass by value works for template type deduction for string data types.otherwise the compiler cannot convert raw array to raw pointer.
 
    void push(const T& val)
    {
