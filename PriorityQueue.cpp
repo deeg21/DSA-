@@ -1,10 +1,13 @@
 /*
      Deepika Goyal:20 December,2022
+     Revision: 7th July, 2023
 */
 /*
 * a Heap is a Complete Binary Tree. A complete binary tree is a binary tree in which all internal nodes are 
-  filled except some leaf nodes and follow left to right 
+  filled except some leaf nodes and follow left to right and top to down order for filling the nodes.
+  All CBT are balanced trees.
 */
+
 #include<iostream>
 #include<vector>
 
@@ -17,10 +20,20 @@ void insert(std::vector<int> &heap,int val);
 //sint getHighestPriority(std::vector<int> &heap);
 void printHeap(std::vector<int> &heap);
 void deleteHighestPriority(std::vector<int> &heap);
+void IncreaseValue(vector<int> heap, int index, int value);//7th June,2023
+void DecreaseValue(vector<int> heap, int index, int value);//7th June ,2023
 
 /*A priority queue is a max heap, in which, the maximum value will be at the top. Here we are following the Post order traversal method.*/
-/* Insert value at the end of heap. In a binary tree, the value will be inserted in the last leaf node and 
+/* Insert/Push value/key at the end of heap. In a binary tree, the value will be inserted in the last leaf node and 
    then heapified to move it to its correct position.*/
+/* Alternative implementation for Push/Insert operation on heap.7th July, 2023 Techdose lecture video, To be tested. Time complexity(o(logN)
+    i=heap.size()-1;
+    while(i>0 && heap[i/2]>heap[i])
+    {
+       swap(heap[i/2],heap[i]);
+       i=i/2;
+    }
+*/
 void Insert(std::vector<int> &heap,int val)
 {
    int size=heap.size();
@@ -28,6 +41,25 @@ void Insert(std::vector<int> &heap,int val)
 
   if(size>0)
      BuildHeap(heap,heap.size()-1);
+}
+
+void IncreaseValue(vector<int> heap, int index, int value)
+{
+     heap[index]=value;
+     int i=index;
+     while(i<0 && heap[i/2]>heap[i])   //percolate up, same as insertkey
+     {
+          swap(heap[i],heap[i/2]);
+          i=i/2;
+     }               
+}
+
+void DecreaseValue(vector<int> heap, int index, int value)
+{
+     heap[index]=value;
+     int i=index;
+     Heapify(heap,index,heap.size()-1);//This is MaxHeapify(), its a percolate down approach if viewed independently of BuildHeap.
+     
 }
 
 /*
@@ -75,7 +107,7 @@ void Heapify(std::vector<int>& heap,int index,int size)
     In a CBT, all the internal nodes are intact, leaf nodes might not be complete.
     The internal nodes exist from 0 to N/2-1 in a 0 based index.
     Leaf nodes start from N/2 to N-1.
-    so we start heapify from the first leaf node.???
+    so we start heapify from the first internal node starting from bottom.)
 
  
    
@@ -95,12 +127,13 @@ void swap(int& x,int& y)
        
 }
 /* Deletes the highest priority Node which is the root/parent node or first node in the vector.
-   swap the first and last node. Now delete the last node. heapify the entire list by calling BuildHeap  */
+   swap the first and last node. Now delete the last node. heapify the entire list by calling BuildHeap. */
+
 void deleteHighestPriority(std::vector<int> &heap)
 {
      int size=heap.size();
      if(size==0)
-      std::cout<<"Priority Queue is Empty!!";
+      std::cout<<"Priority Queue is Empty!!";//underflow
      else
      {
          swap(heap[0],heap[size-1]);
@@ -109,6 +142,7 @@ void deleteHighestPriority(std::vector<int> &heap)
          BuildHeap(heap,heap.size()-1);
      }
 }
+
 void printHeap(std::vector<int> &heap)
 {
    if(heap.size()==0)
@@ -136,5 +170,10 @@ int main()
    printHeap(heap);
    deleteHighestPriority(heap);
    printHeap(heap);
+
+  /*7th June,2023, test Increase Key/Value, Decrease Key/value. This follows zero based indexing.*/
+     IncreaseValue(heap,2,100);//insert value 100 at index 2,3rd position
+     DecreaseValue(heap,3,1);//insert value 1 at index 3
+     
 
 }
